@@ -1,9 +1,0 @@
-wheel
-numpy>=1.14.0
-opencv-python-headless
-streamlit
-pillow
-facenet_pytorch
-streamlit_webrtc
-fastapi
-pydantic
