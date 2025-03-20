@@ -227,42 +227,93 @@
 
 
 
+# import streamlit as st
+# import requests
+# import cv2
+# import numpy as np
+
+# # FastAPI endpoint
+# API_URL = "http://127.0.0.1:8000/detect-faces/"
+
+# st.title("Real-Time Face Detection using MTCNN (FastAPI)")
+
+# # Webcam control state
+# if "run_webcam" not in st.session_state:
+#     st.session_state.run_webcam = False
+
+# # Start webcam button
+# if st.button("Start Webcam"):
+#     st.session_state.run_webcam = True
+
+# # Stop webcam button
+# if st.button("Stop Webcam"):
+#     st.session_state.run_webcam = False
+
+# if st.session_state.run_webcam:
+#     cap = cv2.VideoCapture(0)
+#     stframe = st.empty()
+
+#     while st.session_state.run_webcam:
+#         ret, frame = cap.read()
+#         if not ret:
+#             st.error("Failed to capture frame from webcam.")
+#             break
+
+#         frame = cv2.flip(frame, 1)
+
+#         # Convert frame to bytes for API request
+#         _, img_encoded = cv2.imencode('.jpg', frame)
+#         img_bytes = img_encoded.tobytes()
+
+#         # Send frame to FastAPI for face detection
+#         files = {'file': ('frame.jpg', img_bytes, 'image/jpeg')}
+#         response = requests.post(API_URL, files=files)
+
+#         if response.status_code == 200:
+#             result = response.json()
+
+#             # Draw bounding boxes if faces are detected
+#             for face in result['details']:
+#                 x, y, w, h = face['box_coordinates']
+#                 cv2.rectangle(frame, (x, y), (w, h), (0, 255, 0), 2)
+
+#         # Convert frame to RGB for Streamlit display
+#         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+#         stframe.image(frame, channels="RGB", use_container_width=True)
+
+#     cap.release()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import streamlit as st
 import requests
 import cv2
 import numpy as np
+from streamlit_webrtc import webrtc_streamer, VideoTransformerBase
 
 # FastAPI endpoint
-API_URL = "http://127.0.0.1:8000/detect-faces/"
+API_URL = "https://your-api-url/detect-faces/"  # Update with deployed API URL
 
-st.title("Real-Time Face Detection using MTCNN (FastAPI)")
+class FaceDetectionTransformer(VideoTransformerBase):
+    def transform(self, frame):
+        img = frame.to_ndarray(format="bgr24")  # Convert frame to NumPy array
 
-# Webcam control state
-if "run_webcam" not in st.session_state:
-    st.session_state.run_webcam = False
-
-# Start webcam button
-if st.button("Start Webcam"):
-    st.session_state.run_webcam = True
-
-# Stop webcam button
-if st.button("Stop Webcam"):
-    st.session_state.run_webcam = False
-
-if st.session_state.run_webcam:
-    cap = cv2.VideoCapture(0)
-    stframe = st.empty()
-
-    while st.session_state.run_webcam:
-        ret, frame = cap.read()
-        if not ret:
-            st.error("Failed to capture frame from webcam.")
-            break
-
-        frame = cv2.flip(frame, 1)
-
-        # Convert frame to bytes for API request
-        _, img_encoded = cv2.imencode('.jpg', frame)
+        # Encode image to send to API
+        _, img_encoded = cv2.imencode('.jpg', img)
         img_bytes = img_encoded.tobytes()
 
         # Send frame to FastAPI for face detection
@@ -275,10 +326,12 @@ if st.session_state.run_webcam:
             # Draw bounding boxes if faces are detected
             for face in result['details']:
                 x, y, w, h = face['box_coordinates']
-                cv2.rectangle(frame, (x, y), (w, h), (0, 255, 0), 2)
+                cv2.rectangle(img, (x, y), (w, h), (0, 255, 0), 2)
 
-        # Convert frame to RGB for Streamlit display
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        stframe.image(frame, channels="RGB", use_container_width=True)
+        return img  # Return modified frame
 
-    cap.release()
+st.title("Real-Time Face Detection (Streamlit WebRTC)")
+
+# Start WebRTC-based webcam
+webrtc_streamer(key="face-detection", video_transformer_factory=FaceDetectionTransformer)
+
