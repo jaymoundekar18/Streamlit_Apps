@@ -1,5 +1,5 @@
 import streamlit as st
-from app.services.api_client import APIClient
+from services.api_client import APIClient
 
 def render():
     st.header("📊 User Dashboard")
