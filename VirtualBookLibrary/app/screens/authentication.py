@@ -1,5 +1,5 @@
 import streamlit as st
-from app.services import operations
+from services import operations
 
 
 def render():
