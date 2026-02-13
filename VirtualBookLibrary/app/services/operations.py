@@ -1,5 +1,5 @@
 import streamlit as st
-from app.services.api_client import APIClient
+from services.api_client import APIClient
 
 def create_new_user(full_name: str, username: str, email: str, password: str):
     try:
