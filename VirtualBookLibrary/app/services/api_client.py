@@ -1,5 +1,5 @@
 import requests
-from app.core.config import API_BASE_URL
+from core.config import API_BASE_URL
 
 class APIClient:
 
