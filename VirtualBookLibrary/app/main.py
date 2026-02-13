@@ -48,16 +48,16 @@ st.sidebar.title("Navigation")
 if st.sidebar.button("Refresh", icon="🔄", key="refresh_button"):
     st.rerun()
 
-if st.sidebar.button("Home", icon="🏠", key="home_button",width=200):
+if st.sidebar.button("Home", icon="🏠", key="home_button",width=300):
     st.session_state.page = "Home"
 
-if st.sidebar.button("Dashboard", icon="📊", key="dashboard_button",width=200):
+if st.sidebar.button("Dashboard", icon="📊", key="dashboard_button",width=300):
     st.session_state.page = "Dashboard"
 
-if st.sidebar.button("Account", icon="👤", key="account_button",width=200):
+if st.sidebar.button("Account", icon="👤", key="account_button",width=300):
     st.session_state.page = "Account"
 
-if st.sidebar.button("Logout", icon="↩️", key="logout_button",width=200):
+if st.sidebar.button("Logout", icon="↩️", key="logout_button",width=300):
     st.session_state.authenticated = False
     st.session_state.page = "None"
     st.session_state.logged_user = None
