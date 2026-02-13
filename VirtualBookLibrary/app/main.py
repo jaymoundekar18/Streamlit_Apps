@@ -1,6 +1,6 @@
 import streamlit as st
-from app.core.config import APP_TITLE
-from app.screens import home, dashboard, authentication, account
+from core.config import APP_TITLE
+from screens import home, dashboard, authentication, account
 
 # Page Configurations
 st.set_page_config(page_title=APP_TITLE, layout="wide")
