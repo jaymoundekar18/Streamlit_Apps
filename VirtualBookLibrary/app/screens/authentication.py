@@ -22,7 +22,8 @@ def render():
     if "register_password" not in st.session_state:
         st.session_state.register_password = ""
 
-    st.header("🔐 Authentication")
+    st.header("Login to get awesome experience of the Virtual Library")
+    st.markdown("###### No personal data is required for creating account")
 
     tab1, tab2 = st.tabs(["Login", "Register"])
 
