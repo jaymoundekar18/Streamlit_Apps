@@ -74,3 +74,12 @@ class APIClient:
             timeout=APIClient.TIMEOUT
         )
         return APIClient._handle_response(response)
+
+    @staticmethod
+    def add_book(user_id:str, data:dict):
+        response = requests.post(
+            f"{API_BASE_URL}/users/{user_id}/books",
+            json=data,
+            timeout=APIClient.TIMEOUT
+        )
+        return APIClient._handle_response(response)
