@@ -26,12 +26,18 @@ def render():
 
     if "book_page" not in st.session_state:
         st.session_state.book_page = 1
-
+        
+    if "book_genre" not in st.session_state:
+        st.session_state.book_genre = books_genre[0]
+        
     if "obook_name" not in st.session_state:
         st.session_state.obook_name = ""
 
     if "obook_author" not in st.session_state:
         st.session_state.obook_author = ""
+    
+    if "obook_genre" not in st.session_state:
+        st.session_state.obook_genre = books_genre[0]
 
     if "obook_page" not in st.session_state:
         st.session_state.obook_page = 1
@@ -52,7 +58,8 @@ def render():
             book_author = st.text_input("Book Author", placeholder="Enter author name", key="book_author")
 
             genre = st.selectbox(
-                "Genre",books_genre
+                "Genre",books_genre,
+                key="book_genre"
             )
 
             book_pages = st.number_input("Number of Pages", min_value=1, step=1, key="book_page")
@@ -89,6 +96,7 @@ def render():
                         del st.session_state["book_name"]
                         del st.session_state["book_author"]
                         del st.session_state["book_page"]
+                        del st.session_state["book_genre"]
 
                     else:
                         st.error("Unable to add book right now.")
@@ -102,7 +110,8 @@ def render():
             book_author = st.text_input("Book Author", placeholder="Enter author name", key="obook_author")
 
             genre = st.selectbox(
-                "Genre", books_genre
+                "Genre", books_genre,
+                key="obook_genre"
             )
 
             st.markdown("##### ⏱ Reading Time (HH:MM:SS)")
@@ -171,6 +180,7 @@ def render():
                         st.success("Book added successfully.")
                         del st.session_state["obook_name"]
                         del st.session_state["obook_author"]
+                        del st.session_state["obook_genre"]
                         del st.session_state["obook_page"]   
                         del st.session_state["obook_review"]
                         del st.session_state["obook_rating"]
