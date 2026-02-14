@@ -82,7 +82,7 @@ def render():
                         "start_date": start_date.isoformat(),
                         "end_date": ""
                     }
-                    st.json(new_book_data)
+                    # st.json(new_book_data)
                     if operations.add_userBook(st.session_state.current_user_id,new_book_data):
                         st.success("Book added successfully.")
 
@@ -166,7 +166,7 @@ def render():
                         "start_date": start_date.isoformat() if start_date else None,
                         "end_date": "" if book_status=="In-progress" else end_date.isoformat()
                     }
-                    st.json(old_book_data)
+                    # st.json(old_book_data)
                     if operations.add_userBook(st.session_state.current_user_id,old_book_data):
                         st.success("Book added successfully.")
                         del st.session_state["obook_name"]
