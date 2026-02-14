@@ -89,3 +89,14 @@ def del_account(user_id: str):
     except Exception as e:
         print("Error deleting user:", e)
         return False
+
+def add_userBook(user_id:str, data:dict):
+    try:
+        result = APIClient.add_book(user_id,data)
+        print("Book added successfully:", result)
+        if "books" in result:
+            return True
+        return False
+        
+    except Exception as e:
+        print("Error while adding book.", e)
