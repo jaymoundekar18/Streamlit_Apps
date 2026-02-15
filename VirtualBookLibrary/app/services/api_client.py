@@ -83,3 +83,11 @@ class APIClient:
             timeout=APIClient.TIMEOUT
         )
         return APIClient._handle_response(response)
+
+    @staticmethod
+    def get_userBookData(user_id:str):
+        response = requests.get(
+            f"{API_BASE_URL}/users/{user_id}/books",
+            timeout=APIClient.TIMEOUT
+        )
+        return APIClient._handle_response(response)
