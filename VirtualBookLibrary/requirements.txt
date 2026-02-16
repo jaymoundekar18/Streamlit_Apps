@@ -1,5 +1,0 @@
-streamlit
-plotly
-pandas
-pymongo
-requests
