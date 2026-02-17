@@ -104,9 +104,13 @@ def render():
 
                 book_review = st.text_area("Book Review",  value=st.session_state.curr_book_data.get("book_review"), disabled=not st.session_state.edit_book, placeholder="Write your book review", key="curr_book_review")
 
+                if st.session_state.curr_book_data.get("rating") is None:
+                    defValue = 1.0
+                else:
+                    defValue = st.session_state.curr_book_data.get("rating")
                 rating = st.number_input(
                     "Rating (1.0-5.0)",
-                    value=st.session_state.curr_book_data.get("rating"),
+                    value= defValue,
                     min_value=1.0,
                     max_value=5.0,
                     step=0.1,
@@ -166,10 +170,10 @@ def render():
                             "reading_time": reading_time,
                             "book_pages": book_pages,
                             "book_review": book_review,
-                            "rating": float() if book_status=="In-progress" else rating,
+                            "rating": None if book_status=="In-progress" else rating,
                             "book_status": book_status,
                             "start_date": start_date.isoformat() if start_date else None,
-                            "end_date": "" if book_status=="In-progress" else end_date.isoformat()
+                            "end_date": None if book_status=="In-progress" else end_date.isoformat()
                         }
                         # st.json(updated_book_data)
                         if operations.update_Book(st.session_state.current_user_id,bookIndex,updated_book_data):

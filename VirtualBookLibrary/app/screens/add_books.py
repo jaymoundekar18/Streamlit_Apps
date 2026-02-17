@@ -81,10 +81,10 @@ def render():
                         "reading_time": "00:00:00",
                         "book_pages": book_pages,
                         "rating": float(),
-                        "book_review":"",
+                        "book_review":None,
                         "book_status": book_status,
                         "start_date": start_date.isoformat(),
-                        "end_date": ""
+                        "end_date": None
                     }
                     # st.json(new_book_data)
                     if operations.add_userBook(st.session_state.current_user_id,new_book_data):

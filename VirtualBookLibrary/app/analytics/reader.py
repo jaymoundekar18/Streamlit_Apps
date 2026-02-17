@@ -39,9 +39,11 @@ def showanalytics():
         total_books = len(df)
         completed_books = len(df[df["book_status"] == "Completed"])
         total_pages = total_pages = df[df["book_status"] == "Completed"]["book_pages"].sum()
-        avg_rating = round(df["rating"].mean(), 2)
+        new_rdf = df[df["rating"]!=0.0]
+        avg_rating =  round(new_rdf["rating"].mean(), 2)
         total_hours = round(df["reading_hours"].sum(), 2)
-        avg_reading_time = round(df['reading_hours'].mean(),2)
+        new_tdf = df[df["reading_hours"]!=0.0]
+        avg_reading_time = round(new_tdf['reading_hours'].mean(),2)
         col1, col2, col3, col4 = st.columns(4)
 
         col1.metric("Total Books", total_books)
