@@ -88,7 +88,7 @@ def render():
                     }
                     # st.json(new_book_data)
                     if operations.add_userBook(st.session_state.current_user_id,new_book_data):
-                        st.success("Book added successfully.\n\n Please refresh.")
+                        st.success("Book added successfully.\n\n Please refresh the page to see changes reflected in the dashboard.")
 
                         del st.session_state["book_name"]
                         del st.session_state["book_author"]
@@ -158,8 +158,6 @@ def render():
                 else:
                     reading_time = f"{int(hours):02}:{int(minutes):02}:{int(seconds):02}"
 
-                    st.success("Book added successfully.\n\n Please refresh.")
-
                     old_book_data = {
                         "book_name": book_name,
                         "book_author": book_author,
@@ -174,7 +172,7 @@ def render():
                     }
                     # st.json(old_book_data)
                     if operations.add_userBook(st.session_state.current_user_id,old_book_data):
-                        st.success("Book added successfully.")
+                        st.success("Book added successfully.\n\n Please refresh the page to see changes reflected in the dashboard.")
                         del st.session_state["obook_name"]
                         del st.session_state["obook_author"]
                         del st.session_state["obook_genre"]

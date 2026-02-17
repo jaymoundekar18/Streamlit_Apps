@@ -170,7 +170,7 @@ def render():
                             "reading_time": reading_time,
                             "book_pages": book_pages,
                             "book_review": book_review,
-                            "rating": None if book_status=="In-progress" else rating,
+                            "rating": float() if book_status=="In-progress" else rating,
                             "book_status": book_status,
                             "start_date": start_date.isoformat() if start_date else None,
                             "end_date": None if book_status=="In-progress" else end_date.isoformat()
