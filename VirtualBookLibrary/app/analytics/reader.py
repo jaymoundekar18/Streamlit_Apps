@@ -11,7 +11,7 @@ def showanalytics():
     st.markdown("### 📚 Book Analytics Dashboard")
 
     if not user_BookData:
-        st.info("No books available")
+        st.info("No books found in your library")
         col1, col2, col3, col4 = st.columns(4)
 
         # ----------Analysis Section-------------

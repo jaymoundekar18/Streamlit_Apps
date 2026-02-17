@@ -25,9 +25,8 @@ def render():
         genre_dict[genre].append(book)
 
     sorted_genres = sorted(genre_dict.keys())
-
+    
     for genre in sorted_genres:
-
         books_in_genre = genre_dict[genre]
 
         st.markdown(f"## 📂 {genre}")
@@ -51,8 +50,10 @@ def render():
                     with st.expander(f"{icon[1]} {book.get('book_name')}"):
                         display_book_details(book)
 
+            
         st.divider()
         st.divider()
+                    
 
 def display_book_details(book):
     

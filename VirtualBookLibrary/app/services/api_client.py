@@ -91,3 +91,28 @@ class APIClient:
             timeout=APIClient.TIMEOUT
         )
         return APIClient._handle_response(response)
+    
+    @staticmethod
+    def get_userBookDataByIndex(user_id:str,bookIndex:int):
+        response = requests.get(
+            f"{API_BASE_URL}/users/{user_id}/books/{bookIndex}",
+            timeout=APIClient.TIMEOUT
+        )
+        return APIClient._handle_response(response)
+
+    @staticmethod
+    def get_userBookNames(user_id:str):
+        response = requests.get(
+            f"{API_BASE_URL}/users/{user_id}/booknames",
+            timeout=APIClient.TIMEOUT
+        )
+        return APIClient._handle_response(response)
+
+    @staticmethod
+    def update_userBookData(user_id:str,bookIndex:int,data:dict):
+        response = requests.put(
+            f"{API_BASE_URL}/users/{user_id}/books/{bookIndex}",
+            json=data,
+            timeout=APIClient.TIMEOUT
+        )
+        return APIClient._handle_response(response)

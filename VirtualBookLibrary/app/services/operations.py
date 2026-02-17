@@ -100,3 +100,14 @@ def add_userBook(user_id:str, data:dict):
         
     except Exception as e:
         print("Error while adding book.", e)
+
+def update_Book(user_id:str, bindex:int, data:dict):
+    try:
+        result = APIClient.update_userBookData(user_id,bindex,data)
+        print("Book added successfully:", result)
+        if "books" in result:
+            return True
+        return False
+        
+    except Exception as e:
+        print("Error while adding book.", e)

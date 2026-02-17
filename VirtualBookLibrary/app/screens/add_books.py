@@ -1,21 +1,18 @@
-
 import streamlit as st
 from datetime import date
 from services import operations
 
 def render():
+    st.markdown("---")
     st.header("📚 Add Books")
-    books_genre = ['---Select---',
-                 'Action Fiction', 'Adventure Fiction', 'Alternate History', 'Autobiography', 'Biography', 
-                 'Contemporary Literature', 'Contemporary Romance', 'Crime Fiction', 'Detective Fiction', 'Essay',
-                 'Fairy Tale', 'Fantasy', 'Fantasy Fiction', 'Fiction', 'Genre Fiction', 'Graphic Novel', 
-                 'Historical Fantasy', 'Historical Fiction', 'Historical Romance', 'History',
-                 'Horror Fiction', 'Humor', 'Literary Fiction', 'Magical Realism', 'Memoir', 'Mystery', 'Narrative', 
-                 'New Adult Fiction', 'Non-fiction', 'Novel', 'Paranormal Romance', 'Philosophy', 'Poetry', 'Quotation', 
-                 'Romance', 'Romance Novel', 'Satire', 'Science', 'Science Fantasy', 'Science Fiction',
-                 'Self-help Book', 'Short Story', 'Social Science', 'Speculative Fiction', 'Spirituality', 'Thriller', 
-                 'Travel Literature', 'True Crime', 'Western Fiction', "Women's Fiction", 'Young Adult Literature'
-                ]
+    books_genre = ['---Select---','Action Fiction','Adventure Fiction','Alternate History','Autobiography','Biography',
+                'Business','Contemporary Literature','Contemporary Romance','Crime Fiction','Detective Fiction','Essay',
+                'Fairy Tale','Fantasy','Fantasy Fiction','Fiction','Finance','Genre Fiction','Graphic Novel','Historical Fantasy',
+                'Historical Fiction','Historical Romance','History','Horror Fiction','Humor','Leadership','Literary Fiction',
+                'Magical Realism','Memoir','Motivation','Mystery','Narrative','New Adult Fiction','Non-fiction','Novel','Paranormal Romance',
+                'Philosophy','Poetry','Productivity','Psychology','Quotation','Romance','Romance Novel','Satire','Science','Science Fantasy',
+                'Science Fiction','Self-Development','Self-Help','Self-Improvement','Self-help Book','Short Story','Social Science','Speculative Fiction',
+                'Spirituality','Thriller','Travel Literature','True Crime','Western Fiction',"Women's Fiction",'Young Adult Literature']
 
 
     if "book_name" not in st.session_state:
