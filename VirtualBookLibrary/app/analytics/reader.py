@@ -27,9 +27,9 @@ def showanalytics():
 
         df = pd.DataFrame(user_BookData)
 
-        # Convert dates
-        df["start_date"] = pd.to_datetime(df["start_date"])
-        df["end_date"] = pd.to_datetime(df["end_date"])
+        # # Convert dates
+        # df["start_date"] = pd.to_datetime(df["start_date"])
+        # df["end_date"] = pd.to_datetime(df["end_date"])
 
         # Convert reading_time to hours
         df["reading_hours"] = pd.to_timedelta(df["reading_time"]).dt.total_seconds() / 3600

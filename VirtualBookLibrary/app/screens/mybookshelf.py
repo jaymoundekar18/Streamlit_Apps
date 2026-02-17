@@ -70,5 +70,9 @@ def display_book_details(book):
     
     with col2:
         st.write(f"**Start Date:** {datetime.strptime(book.get('start_date'), '%Y-%m-%d').strftime('%d-%m-%Y')}")
-        st.write(f"**End Date:** {datetime.strptime(book.get('end_date'), '%Y-%m-%d').strftime('%d-%m-%Y')}")
+        if book.get('end_date') == "":
+            end_date = None
+        else:
+            end_date =  datetime.strptime(book.get('end_date'), '%Y-%m-%d').strftime('%d-%m-%Y')
+        st.write(f"**End Date:** {end_date}")
         st.write(f"**Book Review:** {book.get('book_review')}")
