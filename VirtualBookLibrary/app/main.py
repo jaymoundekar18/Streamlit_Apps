@@ -1,6 +1,6 @@
 import streamlit as st
 from core.config import APP_TITLE
-from screens import home, authentication, account, add_books
+from screens import home, authentication, account, add_books, mybookshelf
 
 # Page Configurations
 st.set_page_config(page_title=APP_TITLE, layout="wide")
@@ -51,7 +51,10 @@ if st.sidebar.button("Refresh", icon="🔄", key="refresh_button"):
 if st.sidebar.button("Home", icon="🏠", key="home_button",width=300):
     st.session_state.page = "Home"
 
-if st.sidebar.button("Add Books", icon="📚", key="addBook_button",width=300):
+if st.sidebar.button("My Bookshelf", icon="📚", key="bookshelf_button",width=300):
+    st.session_state.page = "Bookshelf"
+
+if st.sidebar.button("Add Books", icon="📕", key="addBook_button",width=300):
     st.session_state.page = "AddBook"
     
 if st.sidebar.button("Account", icon="👤", key="account_button",width=300):
@@ -68,6 +71,9 @@ if st.sidebar.button("Logout", icon="↩️", key="logout_button",width=300):
 if st.session_state.page == "Home":
     home.render()
     
+elif st.session_state.page == "Bookshelf":
+    mybookshelf.render()
+
 elif st.session_state.page == "AddBook":
     add_books.render()
 

@@ -6,6 +6,6 @@ from analytics import reader
 def render():
     st.session_state.user_details = APIClient.get_user(st.session_state.current_user_id)
 
-    st.header(f"Welcome, 👤 {st.session_state.user_details.get('fullname').title()}!")
+    st.markdown(f"## Welcome, 👤 {st.session_state.user_details.get('fullname').title()}!")
     
     reader.showanalytics()
