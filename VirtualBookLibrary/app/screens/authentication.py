@@ -62,7 +62,9 @@ def render():
             if not username or not password:
                 st.error("Please enter both username and password")
             else:
-                if operations.authenticate_user(username, password):
+                result = operations.authenticate_user(username, password)
+                if result["isvalid"]:
+                    # print(result["msg"])
                     st.toast(f"Logged in as {username} 🎉")
                     st.session_state.login_success = True
                     st.session_state.logged_user = username
@@ -74,7 +76,7 @@ def render():
                     st.rerun()
 
                 else:
-                    st.error("Invalid username or password")
+                    st.error(result["msg"])
 
     # ------------------ REGISTRATION TAB ------------------ #
     with tab2:
@@ -114,11 +116,13 @@ def render():
             if not full_name or not username or not email or not password:
                 st.error("All fields are required")
             else:
-                if operations.check_user(username):
-                    st.error("Username already exists. Please choose a different one.")
+                result = operations.check_user(username)
+                if result["isexist"]:
+                    st.error(result["msg"])
                     return
-                if operations.create_new_user(full_name, username, email, password):
-                    st.success(f"User {username} created successfully 🎉")
+                create_result = operations.create_new_user(full_name, username, email, password)
+                if create_result['iscreated']:
+                    st.success(create_result['msg'])
                     st.session_state.register_success = True
                     # ✅ SAFE RESET
                     del st.session_state["register_full_name"]
@@ -128,4 +132,4 @@ def render():
 
                     st.rerun()
                 else:
-                    st.error("Failed to create user. Please try again.")
+                    st.error(f"Failed to create user. {create_result['msg']}")

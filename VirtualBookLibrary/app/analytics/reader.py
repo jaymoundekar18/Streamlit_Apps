@@ -44,6 +44,23 @@ def showanalytics():
         total_hours = round(df["reading_hours"].sum(), 2)
         new_tdf = df[df["reading_hours"]!=0.0]
         avg_reading_time = round(new_tdf['reading_hours'].mean(),2)
+
+        delta_value = ""
+        delta_color = "off"
+
+        if completed_books < 7:
+            delta_value = "-"
+            delta_color = "red" 
+        elif 7 <= completed_books < 14:
+            delta_value = "Low"
+            delta_color = "yellow"  
+        elif 14 <= completed_books < 25:
+            delta_value = "Medium"
+            delta_color = "blue"
+        elif 25 <= completed_books :
+            delta_value = "Completed"
+            delta_color = "green"
+
         col1, col2, col3, col4 = st.columns(4)
 
         col1.metric("Total Books", total_books)
@@ -52,6 +69,7 @@ def showanalytics():
         col4.metric("Avg Rating ⭐", avg_rating)
         col1.metric("Total Reading Time (in Hours)",total_hours)
         col2.metric("Average Reading Time per Book (Hrs)",avg_reading_time)
+        col3.metric("Yearly Goal (25)",value=completed_books, delta=delta_value, delta_color=delta_color)
         st.markdown("---")
 
         # Status Distribution

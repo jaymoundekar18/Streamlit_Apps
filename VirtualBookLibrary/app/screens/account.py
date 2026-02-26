@@ -59,17 +59,18 @@ def render():
             else:
                 try:
                     # Call API to update user
-                    if operations.update_userAccount(st.session_state.current_user_id, name, username, email):
+                    result = operations.update_userAccount(st.session_state.current_user_id, name, username, email)
+                    if result['isupdated']:
                         # Update session state
                         st.session_state.account_name = name
                         st.session_state.account_username = username
                         st.session_state.account_email = email
 
                         st.session_state.edit_profile = False
-                        st.success("Account updated successfully ✅. \n\n Please refresh the page to see changes reflected in the dashboard.")
+                        st.success(result['msg'])
                         
                     else:
-                        st.error("Failed to update account. Please try again.")
+                        st.error(f"Failed to update account. {result['msg']}")
                 except Exception as e:
                     st.error(f"Failed to update account: {str(e)}")
 
@@ -99,13 +100,14 @@ def render():
             else:
                 try:
                     # Call API to update user
-                    if operations.update_userPassword(st.session_state.current_user_id, password):
+                    result = operations.update_userPassword(st.session_state.current_user_id, password)
+                    if result['changed']:
                         
                         st.session_state.edit_password = False
-                        st.success("Password changed successfully ✅. \n\n Please refresh the page to see changes reflected in the dashboard.")
+                        st.success(result['msg'])
                         password = ""
                     else:
-                        st.error("Failed to update password. Please try again.")
+                        st.error(f"Failed to update password. {result['msg']}")
                 except Exception as e:
                     st.error(f"Failed to update password: {str(e)}")
                     
@@ -131,8 +133,9 @@ def render():
 
             with col_yes:
                 if st.button("Yes, Delete", type="primary"):
-                    if operations.del_account(st.session_state.current_user_id):
-                        st.success("Account deleted!")
+                    result = operations.del_account(st.session_state.current_user_id)
+                    if result["deleted"]:
+                        st.success(result["msg"])
 
                         st.session_state.confirm_delete = False
                         st.session_state.authenticated = False
@@ -142,7 +145,7 @@ def render():
 
                         st.rerun()
                     else:
-                        st.error("Failed to delete account.")
+                        st.error(f"Failed to delete account. {result['msg']}")
 
             with col_no:
                 if st.button("Cancel"):
