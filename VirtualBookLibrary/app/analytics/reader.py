@@ -7,6 +7,7 @@ def showanalytics():
     # st.json(APIClient.get_userBookData(st.session_state.current_user_id))
     user_BookData = APIClient.get_userBookData(st.session_state.current_user_id)
     st.markdown("---")
+    yearly_goal =  st.session_state.user_details.get('yearly_goal')
 
     st.markdown("### 📚 Book Analytics Dashboard")
 
@@ -38,38 +39,52 @@ def showanalytics():
         
         total_books = len(df)
         completed_books = len(df[df["book_status"] == "Completed"])
+        inprogress_book = len(df[df["book_status"] == "In-progress"])
         total_pages = total_pages = df[df["book_status"] == "Completed"]["book_pages"].sum()
         new_rdf = df[df["rating"]!=0.0]
-        avg_rating =  round(new_rdf["rating"].mean(), 2)
+        # avg_rating =  round(new_rdf["rating"].mean(), 2)
+        avg_rating = round(new_rdf["rating"].mean(), 2)
+        avg_rating = 0 if pd.isna(avg_rating) else avg_rating
+
         total_hours = round(df["reading_hours"].sum(), 2)
         new_tdf = df[df["reading_hours"]!=0.0]
-        avg_reading_time = round(new_tdf['reading_hours'].mean(),2)
+        # avg_reading_time = round(new_tdf['reading_hours'].mean(),2)
+        avg_reading_time = round(new_tdf["reading_hours"].mean(), 2)
+        avg_reading_time = 0 if pd.isna(avg_reading_time) else avg_reading_time
 
-        delta_value = ""
-        delta_color = "off"
-
-        if completed_books < 7:
-            delta_value = "-"
-            delta_color = "red" 
-        elif 7 <= completed_books < 14:
-            delta_value = "Low"
-            delta_color = "yellow"  
-        elif 14 <= completed_books < 25:
-            delta_value = "Medium"
-            delta_color = "blue"
-        elif 25 <= completed_books :
-            delta_value = "Completed"
-            delta_color = "green"
 
         col1, col2, col3, col4 = st.columns(4)
 
-        col1.metric("Total Books", total_books)
-        col2.metric("Completed Books", completed_books)
-        col3.metric("Total Pages Read", total_pages)
-        col4.metric("Avg Rating ⭐", avg_rating)
         col1.metric("Total Reading Time (in Hours)",total_hours)
         col2.metric("Average Reading Time per Book (Hrs)",avg_reading_time)
-        col3.metric("Yearly Goal (25)",value=completed_books, delta=delta_value, delta_color=delta_color)
+        col3.metric("In Progress Books", inprogress_book)
+        col4.metric("Total Pages Read", total_pages)
+
+        col1.metric("Total Books", total_books)
+        
+        delta_value = ""
+        delta_color = "off"
+
+        if yearly_goal == 0:
+            delta_value = "Set Goal"
+            delta_color = "red" 
+            completed_books = 0
+        elif completed_books < yearly_goal*0.3:
+            delta_value = "-"
+            delta_color = "red" 
+        elif yearly_goal*0.3 <= completed_books < yearly_goal*0.75:
+            delta_value = "Low"
+            delta_color = "yellow"  
+        elif yearly_goal*0.75 <= completed_books < yearly_goal:
+            delta_value = "Very Close"
+            delta_color = "blue"
+        elif yearly_goal <= completed_books :
+            delta_value = "Goal Completed"
+            delta_color = "green"
+        col2.metric("Completed Books",value=completed_books, delta=delta_value, delta_color=delta_color)
+        col3.metric(f"Yearly Goal",value=yearly_goal)
+        col4.metric("Avg Rating ⭐", avg_rating)
+        
         st.markdown("---")
 
         # Status Distribution

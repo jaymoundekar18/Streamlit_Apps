@@ -111,7 +111,7 @@ def render():
                 rating = st.number_input(
                     "Rating (1.0-5.0)",
                     value= defValue,
-                    min_value=1.0,
+                    min_value=0.0,
                     max_value=5.0,
                     step=0.1,
                     format="%.1f",
@@ -176,8 +176,9 @@ def render():
                             "end_date": None if book_status=="In-progress" else end_date.isoformat()
                         }
                         # st.json(updated_book_data)
-                        if operations.update_Book(st.session_state.current_user_id,bookIndex,updated_book_data):
-                            st.success(f"Book {book_name} updated successfully. \n\n Please refresh the page to see changes reflected in the dashboard. ")
+                        result = operations.update_Book(st.session_state.current_user_id,bookIndex,updated_book_data)
+                        if result['updated']:
+                            st.success(f"{result['msg']} : {book_name} \n\n Please refresh the page to see changes reflected in the dashboard. ")
                             del st.session_state["curr_book_name"]
                             del st.session_state["curr_book_author"]
                             del st.session_state["curr_book_genre"]
@@ -187,7 +188,7 @@ def render():
                             del st.session_state["curr_book_data"]
                             st.session_state.edit_book = False
                         else:
-                            st.error("Unable to update book right now.")
+                            st.error(result['msg'])
 
         else:
             st.session_state.edit_book = False

@@ -3,24 +3,23 @@ from services.api_client import APIClient
 import json
 
 def create_new_user(full_name: str, username: str, email: str, password: str):
-    try:
-        user_data = {
-            "fullname": full_name,
-            "username": username,
-            "email": email, 
-            "password": password,
-            "books": list()  
-            }
-        result = APIClient.create_user(user_data)
-        print("User created successfully from operations:", result)
-        if "fullname" in result:
-            return {"iscreated": True, "msg": f"User {result['fullname']}created successfully 🎉"}
-        elif "error" in result:
-            return {"iscreated": False, "msg": result["error"]}
-        return False
     
-    except Exception as e:
-        print("Error creating user:", e)
+    user_data = {
+        "fullname": full_name,
+        "username": username,
+        "email": email, 
+        "password": password,
+        "books": list(),
+        "yearly_goal": int()  
+        }
+    result = APIClient.create_user(user_data)
+    print("User created successfully from operations:", result)
+    if "fullname" in result:
+        return {"iscreated": True, "msg": f"User {result['fullname']}created successfully 🎉"}
+    elif "error" in result:
+        return {"iscreated": False, "msg": result["error"]}
+    return False
+    
 
 def authenticate_user(username: str, password: str):
     response = APIClient.authenticate_user(username, password)
@@ -33,21 +32,22 @@ def authenticate_user(username: str, password: str):
         return {"isvalid": True, "msg": "User credentials matched"}
     elif "error" in response:
         print(response)
-        return {"isvalid": False, "msg": json.loads(response['error'])['detail']}
+        return {"isvalid": False, "msg": response['error']}
 
 def check_user(username: str):
-    try:
-        response = APIClient.get_byusername(username)
-        print("User check response:", response)
-        if "username" in response:
-            return {"isexist": True, "msg": "Username already exists. Please choose a different one."}
-        elif "error" in response:
-            return {"isexist": False, "msg": json.loads(response['error'])['detail']}
-        # return False
     
-    except Exception as e:
-        print("Error checking user:", e)
-        return False
+    response = APIClient.get_byusername(username)
+    print("User check response:", response)
+    if "username" in response:
+        return {"isexist": True, "msg": "Username already exists. Please choose a different one."}
+    elif "error" in response:
+        return {"isexist": False, "msg": "Username available"}
+    return {
+        "isexist": False,
+        "msg": "Username available"
+    }
+    
+    
 
 def update_userAccount(user_id: str, full_name: str, username: str, email: str):
     # print("Updating user with ID:", user_id, "and data:", {"fullname": full_name, "username": username, "email": email})
@@ -56,69 +56,63 @@ def update_userAccount(user_id: str, full_name: str, username: str, email: str):
         "username": username, 
         "email": email
         }
-    try:
-        result = APIClient.update_user(user_id, updated_data)
-        print("User updated successfully from operations:", result)
-        if "fullname" in result:
-            return {"isupdated": True, "msg":"Account updated successfully ✅. \n\n Please refresh the page to see changes reflected in the dashboard."}
-        elif "error" in result:
-            return {"isupdated": False, "msg":result['error']}
-        return False
     
-    except Exception as e:
-        print("Error updating user:", e)
-        return False
+    result = APIClient.update_user(user_id, updated_data)
+    print("User updated successfully from operations:", result)
+    if "fullname" in result:
+        return {"isupdated": True, "msg":"Account updated successfully ✅. \n\n Please refresh the page to see changes reflected in the dashboard."}
+    elif "error" in result:
+        return {"isupdated": False, "msg":result['error']}
+    return {"isupdated": False, "msg":"Error"}
+    
 
 def update_userPassword(user_id: str, new_password: str):
     print("Updating password for user ID:", user_id)
     updated_data = {
         "password": new_password
         }
-    try:
-        result = APIClient.update_user(user_id, updated_data)
-        print("Password updated successfully from operations:", result)
-        if "fullname" in result:
-            return {"changed": True, "msg": "Password changed successfully ✅. \n\n Please refresh the page to see changes reflected in the dashboard."}
-        elif "error" in result:
-            return {"changed": False, "msg": result['error']}
-        return False
     
-    except Exception as e:
-        print("Error updating password:", e)
-        return False
+    result = APIClient.update_user(user_id, updated_data)
+    print("Password updated successfully from operations:", result)
+    if "fullname" in result:
+        return {"changed": True, "msg": "Password changed successfully ✅. \n\n Please refresh the page to see changes reflected in the dashboard."}
+    elif "error" in result:
+        return {"changed": False, "msg": result['error']}
+    return {"changed": False, "msg": "Unable to update password at the moment."}
+
 
 def del_account(user_id: str):
-    try:
-        result = APIClient.delete_user_account(user_id)
-        print("User deleted successfully from operations:", result)
-        if "message" in result:
-            return {"deleted": True, "msg": result["message"]}
-        elif "error" in result:
-            return {"deleted": False, "msg": result["error"]}
-        return False
     
-    except Exception as e:
-        print("Error deleting user:", e)
-        return False
-
+    result = APIClient.delete_user_account(user_id)
+    print("User deleted successfully from operations:", result)
+    if "message" in result:
+        return {"deleted": True, "msg": result["message"]}
+    elif "error" in result:
+        return {"deleted": False, "msg": result["error"]}
+    return {"deleted": False, "msg": "Unable to delete account at the moment."}
+    
 def add_userBook(user_id:str, data:dict):
-    try:
-        result = APIClient.add_book(user_id,data)
-        print("Book added successfully:", result)
-        if "books" in result:
-            return True
-        return False
+    
+    result = APIClient.add_book(user_id,data)
+    print("Book added successfully:", result)
+    if "books" in result:
+        return {"added": True, "msg": "Book added successfully."}
+    elif "error" in result:
+        return {"added": False, "msg": result["error"]}
+    return {"added": False, "msg": "Unable to add book at the moment."}
         
-    except Exception as e:
-        print("Error while adding book.", e)
+    
 
 def update_Book(user_id:str, bindex:int, data:dict):
-    try:
-        result = APIClient.update_userBookData(user_id,bindex,data)
-        print("Book added successfully:", result)
-        if "books" in result:
-            return True
-        return False
-        
-    except Exception as e:
-        print("Error while adding book.", e)
+    
+    result = APIClient.update_userBookData(user_id,bindex,data)
+    print("Book updated successfully:", result)
+    if "books" in result:
+        return {"updated": True, "msg": "Book updated successfully"}
+    elif "error" in result:
+        return {"updated": False, "msg": result["error"]}
+    return {"updated": False, "msg": "Unable to update book at the moment."}
+     
+    
+
+

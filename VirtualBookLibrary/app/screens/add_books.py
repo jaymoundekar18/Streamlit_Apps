@@ -171,8 +171,9 @@ def render():
                         "end_date": "" if book_status=="In-progress" else end_date.isoformat()
                     }
                     # st.json(old_book_data)
-                    if operations.add_userBook(st.session_state.current_user_id,old_book_data):
-                        st.success("Book added successfully.\n\n Please refresh the page to see changes reflected in the dashboard.")
+                    result = operations.add_userBook(st.session_state.current_user_id,old_book_data)
+                    if result['added']:
+                        st.success(f"{result['msg']}\n\n Please refresh the page to see changes reflected in the dashboard.")
                         del st.session_state["obook_name"]
                         del st.session_state["obook_author"]
                         del st.session_state["obook_genre"]
@@ -181,5 +182,5 @@ def render():
                         del st.session_state["obook_rating"]
 
                     else:
-                        st.error("Unable to add book right now.")
+                        st.error(result['msg'])
     

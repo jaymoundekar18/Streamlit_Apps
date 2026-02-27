@@ -23,7 +23,7 @@ def render():
         st.session_state.register_password = ""
 
     st.header("Login to get awesome experience of the Virtual Library")
-    st.info("###### **No personal data is required for creating account.")
+    # st.info("###### No personal data is required for creating account.")
 
     tab1, tab2 = st.tabs(["Login", "Register"])
 

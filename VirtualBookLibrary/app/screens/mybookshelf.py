@@ -5,11 +5,10 @@ from datetime import datetime
 import random
 
 def render():
-    st.header("📚 My Library")
-    st.markdown("---")
-
+    
     try:
         books = APIClient.get_userBookData(st.session_state.current_user_id)
+        
     except Exception as e:
         st.error(f"Failed to fetch books: {str(e)}")
         return
@@ -18,6 +17,45 @@ def render():
         st.info("No books found in your library.")
         return
     
+    completed_count = sum(1 for b in books if b.get("book_status") == "Completed")
+    inprogress_count = sum(1 for b in books if b.get("book_status") == "In-progress")
+    notstarted_count = sum(1 for b in books if b.get("book_status") == "Not Started")
+    totalBooks = completed_count+inprogress_count+notstarted_count
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.header("📚 My Library")
+    with col2:
+        sub_title1 , sub_title2 = st.columns(2)
+        with sub_title1:
+            st.markdown("##### Status")
+        with sub_title2:
+            st.markdown(f"Total Books : {totalBooks}")
+
+        subcol1, subcol2, subcol3 = st.columns(3)
+        with subcol1:
+            completed_check = st.checkbox(f"Completed ({completed_count})", value=True)
+        with subcol2:
+            inProgress_check = st.checkbox(f"In-Progress ({inprogress_count})", value=True)
+        with subcol3:
+            notStarted_check = st.checkbox(f"Not Started ({notstarted_count})", value=True)
+
+    st.markdown("---")
+
+    selected_statuses = {
+        status for status, checked in {
+            "Completed": completed_check,
+            "In-progress": inProgress_check,
+            "Not Started": notStarted_check,
+        }.items()
+        if checked
+    }
+
+    books = [
+        book for book in books
+        if book.get("book_status") in selected_statuses
+    ]
+
     genre_dict = defaultdict(list)
 
     for book in books:
