@@ -2,12 +2,21 @@ import pandas as pd
 import streamlit as st
 import plotly.express as px
 from services.api_client import APIClient
+from datetime import datetime
+
 
 def showanalytics():
     # st.json(APIClient.get_userBookData(st.session_state.current_user_id))
     user_BookData = APIClient.get_userBookData(st.session_state.current_user_id)
     st.markdown("---")
+
+    current_year = datetime.now().date().year
+
     yearly_goal =  st.session_state.user_details.get('yearly_goal')
+    print(current_year, yearly_goal)
+
+    goal = next((item['goal'] for item in yearly_goal if int(item['year']) - current_year == 0), 0)
+    print("Goal:", goal)
 
     st.markdown("### 📚 Book Analytics Dashboard")
 
@@ -50,7 +59,7 @@ def showanalytics():
         new_tdf = df[df["reading_hours"]!=0.0]
         # avg_reading_time = round(new_tdf['reading_hours'].mean(),2)
         avg_reading_time = round(new_tdf["reading_hours"].mean(), 2)
-        avg_reading_time = 0 if pd.isna(avg_reading_time) else avg_reading_time
+        avg_reading_time = 0.0 if pd.isna(avg_reading_time) else avg_reading_time
 
 
         col1, col2, col3, col4 = st.columns(4)
@@ -65,24 +74,24 @@ def showanalytics():
         delta_value = ""
         delta_color = "off"
 
-        if yearly_goal == 0:
+        if goal == 0:
             delta_value = "Set Goal"
             delta_color = "red" 
             completed_books = 0
-        elif completed_books < yearly_goal*0.3:
+        elif completed_books < goal*0.3:
             delta_value = "-"
             delta_color = "red" 
-        elif yearly_goal*0.3 <= completed_books < yearly_goal*0.75:
+        elif goal*0.3 <= completed_books < goal*0.75:
             delta_value = "Low"
             delta_color = "yellow"  
-        elif yearly_goal*0.75 <= completed_books < yearly_goal:
+        elif goal*0.75 <= completed_books < goal:
             delta_value = "Very Close"
             delta_color = "blue"
-        elif yearly_goal <= completed_books :
+        elif goal <= completed_books :
             delta_value = "Goal Completed"
             delta_color = "green"
         col2.metric("Completed Books",value=completed_books, delta=delta_value, delta_color=delta_color)
-        col3.metric(f"Yearly Goal",value=yearly_goal)
+        col3.metric(f"Yearly Goal ({current_year})",value=goal)
         col4.metric("Avg Rating ⭐", avg_rating)
         
         st.markdown("---")

@@ -6,7 +6,7 @@ from PIL import Image
 # Page Configurations
 st.set_page_config(page_title=APP_TITLE, layout="wide")
 st.title(APP_TITLE)
-image = Image.open("/mount/src/streamlit_apps/VirtualBookLibrary/app/assets/imgs/book.png")  
+image = Image.open("/workspaces/Streamlit_Apps/VirtualBookLibrary/app/assets/imgs/book.png")  #/mount/src/streamlit_apps/VirtualBookLibrary/app/assets/imgs/book.png
 
 # SESSION STATE INITIALIZATION
 # Authentication state

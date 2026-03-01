@@ -1,6 +1,6 @@
 import streamlit as st
 from datetime import date
-from services import operations
+from services import operations, api_client
 
 def render():
     st.markdown("---")
@@ -44,8 +44,10 @@ def render():
 
     if "obook_rating" not in st.session_state:
         st.session_state.obook_rating = float()
+    if "show_add_goal_form" not in st.session_state:
+        st.session_state.show_add_goal_form = False
 
-    tab1, tab2 = st.tabs(["Add New Book", "Add Old Book"])
+    tab1, tab2, tab3 = st.tabs(["Add New Book", "Add Old Book", "Your Goals"])
 
     # -------------------- ADD NEW BOOK --------------------
     with tab1:
@@ -183,4 +185,116 @@ def render():
 
                     else:
                         st.error(result['msg'])
+
+    with tab3:
+        
+        goals_list = api_client.APIClient.get_user_goals(st.session_state.current_user_id)
+        print(goals_list)
+        
+        goals_list_new = sorted(goals_list, key=lambda x: int(x['year']), reverse=True)
+
+        title_cols1, title_cols2 =  st.columns([6, 1])
+        with title_cols1:
+            st.markdown("### 🎯 Your Reading Goals")
+        with title_cols2:
+            if st.button("➕ Add Goal", type="primary"):
+                st.session_state.show_add_goal_form = True
+
+        st.markdown("---")
+
+        header_cols = st.columns([1, 1, 1, 0.6])
+        header_cols[0].markdown("**Year**")
+        header_cols[1].markdown("**Goal**")
+        header_cols[2].markdown("**Completed**")
+        header_cols[3].markdown("**Edit**")
+
+        for goal in goals_list_new:
+            row_cols = st.columns([1, 1, 1, 0.6])
+
+            row_cols[0].subheader(goal['year'])
+            row_cols[1].badge(label=f"{goal['goal']}",color="green")
+            row_cols[2].markdown(f":violet-badge[{goal['completed']}]")
+
+            if row_cols[3].button("✏️", key=f"edit_{goal['year']}"):
+                st.session_state.edit_goal_id = goal['year']
+                st.session_state.edit_goal_value = goal['goal']
+                st.session_state.goal_completed_values = goal['completed'] 
+                st.rerun()
+
+
+        if st.session_state.show_add_goal_form:
+            st.markdown("---")
+            st.markdown("### 🎯 Add New Reading Goal")
+
+            with st.form("add_goal_form"):
+                goal_year = st.number_input(
+                    "Year",
+                    min_value=2000,
+                    max_value=2100,
+                    step=1
+                )
+
+                goal_value = st.number_input(
+                    "Goal (Number of Books)",
+                    min_value=1,
+                    step=1
+                )
+
+                sub_btn_col1,sub_btn_col2 = st.columns(2)
+                with sub_btn_col1:
+                    submitted = st.form_submit_button("Add Goal")
+
+                    if submitted:
+                        result = operations.add_goal(
+                            st.session_state.current_user_id,
+                            str(goal_year),
+                            goal_value
+                        )
+
+                        if result["added"]:
+                            st.success(result["msg"])
+                            st.session_state.show_add_goal_form = False
+                            st.rerun()
+                        else:
+                            st.error(result["msg"])
+
+                with sub_btn_col2:
+                    cancel = st.form_submit_button("Cancel")
+
+                    if cancel:
+                        st.session_state.show_add_goal_form = False
+                        st.rerun()
+
+
+        if "edit_goal_id" in st.session_state:
+            st.markdown("---")
+            st.markdown(f"### ✏️ Edit {st.session_state.edit_goal_id} Goal")
+
+            index = next((i for i, d in enumerate(goals_list) if d['year'] == st.session_state.edit_goal_id), None)
+            print("Goal index ; ", index)
+
+            with st.form("edit_goal_form"):
+                new_goal = st.number_input(
+                    "Goal",
+                    value=st.session_state.edit_goal_value
+                )
+
+                submitted = st.form_submit_button("Update Goal")
+
+                if submitted:
+                    result = operations.update_goal(
+                        st.session_state.current_user_id,
+                        st.session_state.edit_goal_id,
+                        index,
+                        new_goal,
+                        st.session_state.goal_completed_values
+                    )
+
+                    if result['updated']:
+                        st.success("Goal updated successfully!")
+                        del st.session_state.edit_goal_id
+                        st.rerun()
+                    else:
+                        st.error("Failed to update goal.")
+        
     

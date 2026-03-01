@@ -35,7 +35,7 @@ class APIClient:
             return APIClient._handle_response(response)
 
         except requests.exceptions.ReadTimeout:
-            return {"error": "Server is waking up. Please try again in a few seconds."}
+            return {"error": "Server is waking up. Please try again in a few minutes."}
 
         except requests.exceptions.ConnectionError:
             return {"error": "Unable to connect to server. Please check your connection."}
@@ -123,4 +123,27 @@ class APIClient:
             "PUT",
             f"{API_BASE_URL}/users/{user_id}/books/{bookIndex}",
             json=data
+        )
+
+    @staticmethod
+    def get_user_goals(user_id: str):
+        return APIClient._safe_request(
+            "GET",
+            f"{API_BASE_URL}/users/{user_id}/goals"
+        )
+    
+    @staticmethod
+    def add_user_goals(user_id: str, data: dict):
+        return APIClient._safe_request(
+            "POST",
+            f"{API_BASE_URL}/users/{user_id}/goals",
+            json=data
+        )
+
+    @staticmethod
+    def update_user_goal(user_id: str, goalIndex: int, goal_data: dict):
+        return APIClient._safe_request(
+            "PUT",
+            f"{API_BASE_URL}/users/{user_id}/goal/{goalIndex}",
+            json=goal_data
         )

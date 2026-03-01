@@ -113,6 +113,32 @@ def update_Book(user_id:str, bindex:int, data:dict):
         return {"updated": False, "msg": result["error"]}
     return {"updated": False, "msg": "Unable to update book at the moment."}
      
+
+def add_goal(user_id:str, year:str, goal:int):
+    data = {
+        "year": year,
+        "goal": goal,
+        "completed": 0
+        } 
+    result = APIClient.add_user_goals(user_id,data)
+    print("Goal added successfully:", result)
+    if "fullname" in result:
+        return {"added": True, "msg": "Goal added successfully."}
+    elif "error" in result:
+        return {"added": False, "msg": result["error"]}
+    return {"added": False, "msg": "Unable to add goal at the moment."}
+
+def update_goal(user_id:str, gyear: str, gindex:int, goal:int, completed:int):
+    data = {
+        "year": gyear,
+        "goal": goal,
+        "completed": completed
+        }
     
+    result = APIClient.update_user_goal(user_id=user_id, goalIndex=gindex, goal_data=data)
 
-
+    if "fullname" in result:
+        return {"updated": True, "msg": "Goal updated successfully"}
+    elif "error" in result:
+        return {"updated": False, "msg": result["error"]}
+    return {"updated": False, "msg": "Unable to update goal at the moment."}
