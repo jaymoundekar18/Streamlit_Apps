@@ -1,8 +1,14 @@
 import streamlit as st
 from services.api_client import APIClient
-import json
+from datetime import datetime
 
 def create_new_user(full_name: str, username: str, email: str, password: str):
+
+    streak = {
+    "current_streak": 0,
+    "longest_streak": 0,
+    "last_read_date": None
+   }
     
     user_data = {
         "fullname": full_name,
@@ -10,7 +16,8 @@ def create_new_user(full_name: str, username: str, email: str, password: str):
         "email": email, 
         "password": password,
         "books": list(),
-        "yearly_goal": int()  
+        "yearly_goal": list(), 
+        "streak": streak
         }
     result = APIClient.create_user(user_data)
     print("User created successfully from operations:", result)
@@ -142,3 +149,20 @@ def update_goal(user_id:str, gyear: str, gindex:int, goal:int, completed:int):
     elif "error" in result:
         return {"updated": False, "msg": result["error"]}
     return {"updated": False, "msg": "Unable to update goal at the moment."}
+
+
+def set_streak(user_id:str, current_streak:int,longest_streak:int,last_read_date:str):
+    data = {
+            "streak":{
+                    "current_streak": current_streak,
+                    "longest_streak": longest_streak,
+                    "last_read_date": last_read_date
+                    }
+            }
+    
+    result = APIClient.update_user(user_id=user_id, data=data)
+    if "fullname" in result:
+        return {"isupdated": True, "msg":"Streak updated successfully"}
+    elif "error" in result:
+        return {"isupdated": False, "msg":result['error']}
+    return {"isupdated": False, "msg":"Error"}

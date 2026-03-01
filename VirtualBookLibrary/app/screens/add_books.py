@@ -189,7 +189,7 @@ def render():
     with tab3:
         
         goals_list = api_client.APIClient.get_user_goals(st.session_state.current_user_id)
-        print(goals_list)
+        #print(goals_list)
         
         goals_list_new = sorted(goals_list, key=lambda x: int(x['year']), reverse=True)
 
@@ -271,7 +271,6 @@ def render():
             st.markdown(f"### ✏️ Edit {st.session_state.edit_goal_id} Goal")
 
             index = next((i for i, d in enumerate(goals_list) if d['year'] == st.session_state.edit_goal_id), None)
-            print("Goal index ; ", index)
 
             with st.form("edit_goal_form"):
                 new_goal = st.number_input(

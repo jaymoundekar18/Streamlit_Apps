@@ -6,7 +6,7 @@ from PIL import Image
 # Page Configurations
 st.set_page_config(page_title=APP_TITLE, layout="wide")
 st.title(APP_TITLE)
-image = Image.open("/mount/src/streamlit_apps/VirtualBookLibrary/app/assets/imgs/book.png")
+image = Image.open("/workspaces/Streamlit_Apps/VirtualBookLibrary/app/assets/imgs/book.png") #/mount/src/streamlit_apps/VirtualBookLibrary/app/assets/imgs/book.png
 
 # SESSION STATE INITIALIZATION
 # Authentication state
@@ -54,8 +54,21 @@ st.sidebar.info(
 
 st.sidebar.title("Navigation")
 
-if st.sidebar.button("Refresh", icon="🔄", key="refresh_button"):
-    st.rerun()
+with st.sidebar:
+    if "read_today_clicked" not in st.session_state:
+        st.session_state.read_today_clicked = False
+
+    side_col1, side_col2 = st.columns(2)
+
+    with side_col1:
+        if st.button("Refresh", icon="🔄", key="refresh_button"):
+            st.rerun()
+
+    with side_col2:
+        if st.button("I've read Today", type="primary", key="read_button",disabled=st.session_state.read_today_clicked):
+            home.calculate_streak(st.session_state.streak)
+            st.session_state.read_today_clicked = True
+            st.rerun()
 
 if st.sidebar.button("Home", icon="🏠", key="home_button",width=300):
     st.session_state.page = "Home"

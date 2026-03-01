@@ -13,10 +13,10 @@ def showanalytics():
     current_year = datetime.now().date().year
 
     yearly_goal =  st.session_state.user_details.get('yearly_goal')
-    print(current_year, yearly_goal)
+    # print(current_year, yearly_goal)
 
     goal = next((item['goal'] for item in yearly_goal if int(item['year']) - current_year == 0), 0)
-    print("Goal:", goal)
+    # print("Goal:", goal)
 
     st.markdown("### 📚 Book Analytics Dashboard")
 
