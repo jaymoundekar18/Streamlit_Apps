@@ -1,6 +1,6 @@
 import streamlit as st
 from services import operations
-
+import json
 
 def render():
     # Initialize state before widgets
@@ -76,7 +76,11 @@ def render():
                     st.rerun()
 
                 else:
-                    st.error(result["msg"])
+                    msg = result["msg"]
+                    if "detail" in msg:
+                        st.error(json.loads(msg)["detail"])
+                    else:
+                        st.error(msg)
 
     # ------------------ REGISTRATION TAB ------------------ #
     with tab2:
